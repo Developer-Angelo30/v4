@@ -1,0 +1,162 @@
+.dean-section{
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    overflow: hidden;
+}
+
+.dean-section > .sidebar{
+    overflow-x: hidden;
+    overflow-y: auto;
+    box-shadow: 0px 2px 10px rgba(0,0,0,0.3);
+}
+
+.dean-section > .sidebar > .sidebar-close  {
+    position: absolute;
+    font-size: 25px;
+    color: white;
+    right: 20px;
+    top: 20px;
+    cursor: pointer;
+    display: none;
+ }
+
+.dean-section > .sidebar > .navbar-blue{
+    height: 250px;
+    background-color: var(--blue);
+    padding: 10px;
+    border-radius: 0 0 20px 20px;
+}
+
+
+.dean-section > .sidebar > .sidebar-group-link{
+    padding: 10px;
+    display: grid;
+}
+
+.dean-section > .sidebar > .sidebar-group-link > .unactive-link{
+    background-color: var(--background-main);
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.dean-section > .sidebar > .sidebar-group-link > .active-link{
+    background-color: var(--background);
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: var(--box-shadow);
+    cursor: pointer;
+}
+
+.dean-section > .sidebar > .sidebar-group-link > .unactive-link:hover{
+    background-color: var(--background);
+}
+
+.dean-section > .sidebar > .sidebar-footer{
+    bottom: 30px;
+    position: absolute;
+}
+
+.dean-section > .sidebar > .sidebar-footer > .settingBtn{
+    background-color: #e2e2e2;
+}
+
+.dean-section > .sidebar > .sidebar-footer > .logoutBtn{
+    background-color: rgb(254, 111, 111);
+    color: white;
+}
+
+.content{
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.content > .content-bar{
+    position: fixed;
+    background-color: white;
+    top: 10px;
+    right: 13px;
+    font-size: 25px;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: var(--box-shadow);
+    display: none;
+}
+
+.content > .home,
+.content > .setup,
+.content > .professor,
+.content > .classroom,
+.content > .account,
+.content > .setting{
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-top: 50px;
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px){
+    .dean-section{
+        transition: 0.5s;
+        display: grid;
+        grid-template-columns: 60px 1fr;
+    }
+
+    .dean-section > .sidebar > .navbar-blue > .information-sidebar,
+    .dean-section > .sidebar > .sidebar-group-link > .unactive-link > strong,
+    .dean-section > .sidebar > .sidebar-footer > .settingBtn > strong,
+    .dean-section > .sidebar > .sidebar-footer > .logoutBtn > strong
+    {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 481px) and (max-width: 768px){
+    .dean-section{
+        display: grid;
+        grid-template-columns: 60px 1fr;
+    }
+
+    .dean-section > .sidebar > .navbar-blue > .information-sidebar,
+    .dean-section > .sidebar > .sidebar-group-link > .unactive-link > strong,
+    .dean-section > .sidebar > .sidebar-footer > .settingBtn > strong,
+    .dean-section > .sidebar > .sidebar-footer > .logoutBtn > strong
+    {
+        display: none;
+    }
+
+}
+
+@media screen and (max-width: 480px){
+    .dean-section{
+        display: grid;
+        grid-template-columns: 1fr;
+        overflow: hidden;
+    }
+
+    .dean-section > .sidebar{
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: var(--background);
+        width: 100vw;
+        min-height: 100vh;
+        z-index: 100;
+        display: none;
+    }
+
+    .dean-section > .sidebar > .sidebar-close  {
+        display: block;
+     }
+
+    .dean-section > .sidebar > .sidebar-footer{
+        margin: 10px 0;
+        bottom: 0px;
+        position: relative;
+    }
+
+    .content > .content-bar{
+        display: block;
+    }
+    
+}

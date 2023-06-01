@@ -1,0 +1,116 @@
+
+.login-section{
+    background-image: url("../images/bg-photo.jpg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.login-box{
+    background-color: var(--background);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 70vh;
+    width: 70vw;
+    border-radius: 20px;
+    position: relative;
+    box-shadow: var(--box-shadow);
+}
+
+.login-box > .left{
+    border-radius: 20px 0  0 20px;
+}
+
+.login-box > .left  > .yellow{
+    background-color: var(--yellow);
+    border-radius: inherit;
+}
+
+.login-box > .left  > .orange{
+    height: 95%;
+    background-color: var(--orange);
+    border-radius: inherit;
+}
+
+.login-box > .left  > .blue{
+    height: 85%;
+    background-color: var(--blue);
+    border-radius: inherit;
+}
+
+.login-box > .right{
+    border-radius: 0 20px 20px 0;
+}
+
+.login-box > .right  > .white{
+    background-color: var(--background);
+    border-radius: inherit;
+}
+
+.login-box > .right > .white form img{
+    height: 200px ;
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px){
+    .login-box{
+        background-color: var(--background);
+        grid-template-columns: 1fr;
+        height: 80vh;
+        width: 80vw;
+    }
+
+    .login-box > .left{
+        display: none;
+    }
+
+    .login-box > .right{
+        border-radius: 20px;
+    }
+
+    .login-box > .right > .white form img{
+        height: 170px ;
+    }
+
+}
+
+@media screen and (min-width: 481px) and (max-width: 768px){
+    .login-box{
+        background-color: var(--background);
+        grid-template-columns: 1fr;
+        height: 80vh;
+        width: 90vw;
+    }
+
+    .login-box > .left{
+        display: none;
+    }
+
+    .login-box > .right{
+        border-radius: 20px;
+    }
+
+    .login-box > .right > .white form img{
+        height: 120px ;
+    }
+}
+
+@media screen and (max-width: 480px){
+    .login-box{
+        background-color: var(--background);
+        grid-template-columns: 1fr;
+        height: 80vh;
+        width: 90vw;
+    }
+
+    .login-box > .left{
+        display: none;
+    }
+
+    .login-box > .right{
+        border-radius: 20px;
+    }
+
+    .login-box > .right > .white form img{
+        height: 100px ;
+    }
+}
