@@ -1,12 +1,12 @@
 <?php
-session_start();
+
 include("./database/connection.php");
 class mySession extends DB {
 
-    private $email;
-    private $password;
-    private $role;
-    private $department;
+    public $email;
+    public $password;
+    public $role;
+    public $department;
 
     public function __construct($email,$password,$role,$department)
     {
@@ -18,14 +18,15 @@ class mySession extends DB {
 
     public function checkSession(){
 
-        $email =  mysqli_real_escape_string($this->DBconnection(), $this->email);
-        $password = mysqli_real_escape_string($this->DBconnection(), $this->password);
-        $role = mysqli_real_escape_string($this->DBconnection(), $this->role);
-        $department = mysqli_real_escape_string($this->DBconnection(), $this->department);
+        $check = $this->read("users", array(
+                                "userEmail"=>$this->email,
+                                "userPassword"=>$this->password,
+                                "userRole"=>$this->role,
+                                "userDepartment"=>$this->department
+                             ));
 
-        $sql = "SELECT * FROM users WHERE userEmail = '$email' AND userPassword = '$password' AND userRole = '$role' AND userDepartment = '$department' ";
-        $result = mysqli_query($this->DBconnection(), $sql);
-        if(mysqli_num_rows($result) > 0){
+        if(is_array($check)){
+            $role = $check[0]['userRole'];
             switch($role){
                 case 1:{
                     header("location: ./dean/dashboard.php");

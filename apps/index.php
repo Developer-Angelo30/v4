@@ -1,11 +1,10 @@
 <?php
+session_start();
 include_once("./include/session/checkSession.php");
 if(isset($_SESSION['email']) && isset($_SESSION['password']) && isset($_SESSION['role']) && isset($_SESSION['department'])) {
     $session = new mySession($_SESSION['email'], $_SESSION['password'], $_SESSION['role'], $_SESSION['department']);
     $session->checkSession();
 }
-
-// echo md5("loginAccounts-schedlr");
 
 ?>
 <!DOCTYPE html>
