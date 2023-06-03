@@ -1,7 +1,8 @@
 $(document).ready(()=>{
 
     let errorReset = () =>{
-        $(document).on('click', '.input', function(){
+        $(document).on('keyup', '.input', function(){
+            $(this).removeClass('border-danger')
             $('.error').text('')
             $('.global-error').text('')
             $('.global-error').addClass('d-none')
@@ -9,7 +10,310 @@ $(document).ready(()=>{
     }
     errorReset()
 
-    // acounts  start code
+    // subject start code ------------------
+
+    let startSubject = () =>{
+        
+    }
+    startSubject();
+
+    let addSubject = () => {
+        $(document).on('click', '#add-subject-form', function() {
+          let code = [];
+          let name = [];
+          let year = [];
+          let semester = [];
+          let laboratory = [];
+          let slot = [];
+          let hasError = false;
+      
+          $(".subjecttable-row").each(function() {
+            let row = $(this);
+            let slotNumber = row.attr('slot-number');
+            let sub_code = row.find("input[name='add-subject-code[]']");
+            let sub_name = row.find("input[name='add-subject-name[]']");
+            let sub_year = row.find("select[name='add-subject-year[]']");
+            let sub_semester = row.find("select[name='add-subject-semester[]']");
+            let sub_laboratory = row.find("input[name='add-subject-laboratory[]']").is(":checked");
+            let codeError = row.find(".add-subject-code-error");
+            let nameError = row.find(".add-subject-name-error");
+      
+            if (sub_code.val()) {
+              if (sub_name.val()) {
+                if (sub_year.val()) {
+                  if (sub_semester.val()) {
+                    code.push(sub_code.val());
+                    name.push(sub_name.val());
+                    year.push(sub_year.val());
+                    semester.push(sub_semester.val());
+                    laboratory.push(sub_laboratory);
+                    slot.push(slotNumber);
+                    hasError = false;
+                  }
+                }
+              } else {
+                sub_name.focus();
+                sub_name.addClass('border-danger shadow-danger');
+                nameError.text(`This field is required.`);
+                hasError = true;
+                return false;
+              }
+            } else {
+              sub_code.focus();
+              sub_code.addClass('border-danger shadow-danger');
+              codeError.text(`This field is required.`);
+              hasError = true;
+              return false;
+            }
+          });
+      
+          if (!hasError) {
+            $.ajax({
+              url: '../controller/subject.controller.php',
+              data: {"code": code, "name": name, "year": year, "semester": semester, "laboratory":laboratory  ,"slot": slot, "action-key":"AddSubjects"},
+              type: 'POST',
+              beforeSend: ()=>{
+
+              },
+              success: (response)=> {
+                console.log(response);
+              },
+              complete: ()=>{
+
+              }
+            });
+          }
+        });
+      };
+      addSubject();
+
+    let readSubjects = () =>{
+        const data = ({
+            "action-key":"readSubjects"
+        })
+        $.ajax({
+            url: "../view/subject.view.php",
+            method: "POST",
+            data: data,
+            dataType: "JSON",
+            success: (response)=>{
+                $('#subject-table-fetch').html('')
+                for(i in response){
+                    $('#subject-table-fetch').append(`
+                    <tr>
+                        <td>${response[i]['subCode']}</td>
+                        <td>${response[i]['subName']}</td>
+                        <td>${response[i]['subYear']}</td>
+                        <td>${response[i]['subSemester']}</td>
+                        <td class="" >
+                            ${response[i]['subLaboratory'] == 1 ? '<i class="fa fa-check-circle text-success fs-4" ></i>' : '<i class="fa fa-times-circle text-danger fs-4" ></i> '}
+                        </td>
+                        <td>
+                            <button data-id="${response[i]['subCode']}"id="show-edit-subject-btn" class="btn btn-secondary m-1"  data-bs-toggle="modal" data-bs-target="#subject-edit-modal" ><i class="fa fa-edit" ></i></button>
+                            <button data-id="${response[i]['subCode']}"id="remove-subject-btn" class="btn btn-danger m-1" ><i class="fa fa-trash" ></i></button>
+                        </td>
+                    </tr>
+                    `)
+                }
+                $('#subject-table').DataTable({});
+            }
+        })
+    }
+    readSubjects()
+
+    let showDataSubjectUpdates = () =>{
+        $(document).on('click', '#show-edit-subject-btn', function(){
+            
+            const code = $(this).attr('data-id')
+            const data = ({
+                "code": code,
+                "action-key": "showDataSubjectUpdates"
+            })
+
+            $.ajax({
+                url:"../view/subject.view.php",
+                method: "POST",
+                data: data,
+                dataType: "JSON",
+                success: function(response){
+                    $('.edit-subject-code-static').val(response[0]['subCode'])
+                    $('.edit-subject-code').val(response[0]['subCode'])
+                    $('.edit-subject-name').val(response[0]['subName'])
+                    $('.edit-subject-year').val(response[0]['subYear']).attr("selected",true)
+                    $('.edit-subject-semester').val(response[0]['subSemester']).attr("selected",true)
+                    if(response[0]['subLaboratory'] == 1){
+                        $('.edit-subject-laboratory').attr("checked", true);
+                    }
+                    else{
+                        $('.edit-subject-laboratory').attr("checked", false);
+                    }
+                }
+            })
+        })
+    }
+    showDataSubjectUpdates()
+
+    let actualSubjectUpdates = () =>{
+        $(document).on('click', '#edit-subject-form', ()=>{
+            
+            let staticCode = $('.edit-subject-code-static').val();
+            let code = $('.edit-subject-code').val();
+            let name = $('.edit-subject-name').val();
+            let year = $('.edit-subject-year :selected').val();
+            let semester = $('.edit-subject-semester :selected').val();
+            let lab = $('.edit-subject-laboratory').is(":checked");
+            let laboratory = 0;
+
+            if(lab == true){
+                laboratory = 1;
+            }
+           
+            console.log(`${staticCode} , ${code} , ${name}, ${year} , ${semester}, ${laboratory}`)
+
+            // Swal.fire({
+            //     title: 'Are you sure?',
+            //     text: "You won't be able to revert this!",
+            //     icon: 'warning',
+            //     showCancelButton: true,
+            //     confirmButtonColor: '#3085d6',
+            //     cancelButtonColor: '#d33',
+            //     confirmButtonText: 'Yes, Update!'
+            // }).then((result) => {
+            //     if (result.isConfirmed) {
+            //         if(true){
+            //             if(true){
+
+            //             }
+            //             else{
+
+            //             }
+            //         }
+            //         else{
+
+            //         }
+            //     }
+            // })
+        })
+    }
+    actualSubjectUpdates();
+
+    let rowCount = 1;
+
+    let addSubjectRow = () =>{
+        $(document).on('click', '.add-subject-row', ()=>{
+            ++rowCount;
+            $('#subject-table-add-row').append(`
+                <tr class="subjecttable-row subject-table-row-${rowCount}" slot-number="${rowCount}" >
+                    <td>
+                    <h6 class="fw-thin pt-2" >${rowCount}</h6>
+                    </td>
+                    <td class="text-uppercase" >
+                        <div class="form-group">
+                            <input type="text" id="add-subject-code" name="add-subject-code[]" class="add-subject-code input form-control fix-with-input " placeholder="Code" >
+                            <small class="error add-subject-code-error text-danger text-capitalize" ></small>
+                        </div>
+                    </td>
+                    <td class="text-uppercase" >
+                        <div class="form-group">
+                            <input type="text" id="add-subject-name" name="add-subject-name[]" class="add-subject-name input form-control fix-with-input " placeholder="Name" >
+                            <small class="error add-subject-name-error text-danger text-capitalize" ></small>
+                        </div>
+                    </td>
+                    <td class="text-uppercase" >
+                        <div class="form-group">
+                            <select name="add-subject-year[]" id="add-subject-year" class="form-select input add-subject-year fix-with-input" >
+                                <option value="1">1st Year</option>
+                                <option value="2">2nd Year</option>
+                                <option value="3">3rd Year</option>
+                                <option value="4">4th Year</option>
+                            </select>
+                            <small class="error add-subject-year-error text-danger text-capitalize" ></small>
+                        </div>
+                    </td>
+                    <td class="text-uppercase" >
+                        <div class="form-group">
+                            <select name="add-subject-semester[]" id="add-subject-semester" class="form-select input add-subject-semester fix-with-input" >
+                                <option value="1">1st Semester</option>
+                                <option value="2">2nd Semester</option>
+                            </select>
+                            <small class="error add-subject-semester-error text-danger text-capitalize" ></small>
+                        </div>
+                    </td>
+                    <td class="text-uppercase d-flex justify-content-center align-items-center" >
+                        <input type="checkbox" value="true" name="add-subject-laboratory[]" id="add-subject-laboratory" class="form-check mt-1 add-subject-laboratory" >
+                    </td>
+                    <td class="text-uppercase" >
+                        <button type="button" slot-number-remove="${rowCount}" class="btn btn-danger subject-remove-row"><i class="fa fa-trash"></i></button>
+                    </td>
+                </tr>
+            `)
+
+        })
+    }
+    addSubjectRow();
+
+    let removeSubjectRow = () =>{
+        $(document).on('click', '.subject-remove-row', function(){
+            let slot = $(this).attr('slot-number-remove')
+            $(`.subject-table-row-${slot}`).remove()
+        })
+    }
+    removeSubjectRow()
+
+    let resetSubjectAddRow = ()=>{
+        $(document).on('click', '.subject-reset-add-modal-table', ()=>{
+            rowCount = 1;
+            $('#subject-table-add-row').html('')
+            $('#subject-table-add-row').append(`
+                <tr class="subjecttable-row subject-table-row-${rowCount}" slot-number="${rowCount}" >
+                    <td>
+                    <h6 class="fw-thin pt-2" >${rowCount}</h6>
+                    </td>
+                    <td class="text-uppercase" >
+                        <div class="form-group">
+                            <input type="text" id="add-subject-code" name="add-subject-code[]" class="add-subject-code input form-control fix-with-input " placeholder="Code" >
+                            <small class="error add-subject-code-error text-danger text-capitalize" ></small>
+                        </div>
+                    </td>
+                    <td class="text-uppercase" >
+                        <div class="form-group">
+                            <input type="text" id="add-subject-name" name="add-subject-name[]" class="add-subject-name input form-control fix-with-input " placeholder="Name" >
+                            <small class="error add-subject-name-error text-danger text-capitalize" ></small>
+                        </div>
+                    </td>
+                    <td class="text-uppercase" >
+                        <div class="form-group">
+                            <select name="add-subject-year[]" id="add-subject-year" class="form-select input add-subject-year fix-with-input" >
+                                <option value="1">1st Year</option>
+                                <option value="2">2nd Year</option>
+                                <option value="3">3rd Year</option>
+                                <option value="4">4th Year</option>
+                            </select>
+                            <small class="error add-subject-year-error text-danger text-capitalize" ></small>
+                        </div>
+                    </td>
+                    <td class="text-uppercase" >
+                        <div class="form-group">
+                            <select name="add-subject-semester[]" id="add-subject-semester" class="form-select input add-subject-semester fix-with-input" >
+                                <option value="1">1st Semester</option>
+                                <option value="2">2nd Semester</option>
+                            </select>
+                            <small class="error add-subject-semester-error text-danger text-capitalize" ></small>
+                        </div>
+                    </td>
+                    <td class="text-uppercase d-flex justify-content-center align-items-center" >
+                        <input type="checkbox" value="true" name="add-subject-laboratory[]" id="add-subject-laboratory" class="form-check mt-1 add-subject-laboratory" >
+                    </td>
+                    <td class="text-uppercase" >
+                        <button type="button" slot-number-remove="${rowCount}" class="btn btn-danger subject-remove-row"><i class="fa fa-trash"></i></button>
+                    </td>
+                </tr>
+            `)
+        })
+    }
+    resetSubjectAddRow()
+
+    // acounts  start code --------------------
 
     let accountStart = () =>{
         $(document).on('click', '#account', function(){
@@ -207,7 +511,6 @@ $(document).ready(()=>{
             },
         })
     }
-    readAccounts()
 
     let showDataAccountUpdates = () =>{
         $(document).on('click', '#show-edit-account-btn', function(){

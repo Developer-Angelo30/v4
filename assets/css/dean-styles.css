@@ -1,3 +1,7 @@
+.fix-with-input{
+    min-width: 150px;
+}
+
 .dean-section{
     display: grid;
     grid-template-columns: 300px 1fr;
@@ -87,6 +91,7 @@
 .content > .home,
 .content > .setup,
 .content > .professor,
+.content > .subject,
 .content > .classroom,
 .content > .account,
 .content > .setting{
@@ -95,11 +100,20 @@
     padding-top: 50px;
 }
 
+.content > .subject .row-fetch-subject{
+    background-color: white;
+    max-height: 500px;
+}
+
 @media screen and (min-width: 769px) and (max-width: 1024px){
     .dean-section{
         transition: 0.5s;
         display: grid;
         grid-template-columns: 60px 1fr;
+    }
+
+    .dean-section > .sidebar > .navbar-blue{
+        height: 50px;
     }
 
     .dean-section > .sidebar > .navbar-blue > .information-sidebar,
@@ -115,6 +129,10 @@
     .dean-section{
         display: grid;
         grid-template-columns: 60px 1fr;
+    }
+
+    .dean-section > .sidebar > .navbar-blue{
+        height: 50px;
     }
 
     .dean-section > .sidebar > .navbar-blue > .information-sidebar,
@@ -143,6 +161,10 @@
         min-height: 100vh;
         z-index: 100;
         display: none;
+    }
+
+    .dean-section > .sidebar > .navbar-blue{
+        height: 250px;
     }
 
     .dean-section > .sidebar > .sidebar-close  {

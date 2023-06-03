@@ -5,7 +5,7 @@ class DB {
     private $server = "localhost";
     private $username = "root";
     private $password= "";
-    private $dbname = "capstone";
+    private $dbname = "schedlr";
 
    
 
